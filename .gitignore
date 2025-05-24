@@ -4,3 +4,5 @@
 *.xcworkspacedata
 
 CalorieApp.xcodeproj/xcuserdata/nikhildhavale.xcuserdatad/xcschemes/xcschememanagement.plist
+
+*.xcuserstate

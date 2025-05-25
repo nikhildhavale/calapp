@@ -13,34 +13,60 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
-                DatePicker("Select Date",
-                          selection: $selectedDate,
-                          displayedComponents: [.date])
-                    .datePickerStyle(.graphical)
-                    .padding()
-                
-                List {
-                    ForEach(viewModel.getFoodItemsForDate(selectedDate)) { item in
-                        NavigationLink(destination: FoodDetailView(viewModel: viewModel, foodItem: item)) {
-                            FoodItemRow(item: item)
+            ZStack {
+                VStack {
+                    DatePicker("Select Date",
+                              selection: $selectedDate,
+                              displayedComponents: [.date])
+                        .datePickerStyle(.graphical)
+                        .padding()
+                    
+                    List {
+                        ForEach(viewModel.getFoodItemsForDate(selectedDate)) { item in
+                            NavigationLink(destination: FoodDetailView(viewModel: viewModel, foodItem: item)) {
+                                FoodItemRow(item: item)
+                            }
                         }
-                    }
-                    .onDelete { indices in
-                        indices.forEach { index in
-                            let items = viewModel.getFoodItemsForDate(selectedDate)
-                            viewModel.deleteFoodItem(items[index])
+                        .onDelete { indices in
+                            indices.forEach { index in
+                                let items = viewModel.getFoodItemsForDate(selectedDate)
+                                viewModel.deleteFoodItem(items[index])
+                            }
                         }
                     }
                 }
+                .navigationTitle("Food Log")
+                .navigationBarItems(trailing: Button(action: {
+                    showingImagePicker = true
+                }) {
+                    Image(systemName: "camera")
+                        .imageScale(.large)
+                })
+                
+                if viewModel.isLoading {
+                    Color.black.opacity(0.4)
+                        .edgesIgnoringSafeArea(.all)
+                    
+                    VStack {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                            .scaleEffect(1.5)
+                        
+                        Text("Analyzing Image...")
+                            .foregroundColor(.white)
+                            .padding(.top)
+                    }
+                }
+                
+                if let error = viewModel.errorMessage {
+                    Text(error)
+                        .foregroundColor(.red)
+                        .padding()
+                        .background(Color.white)
+                        .cornerRadius(8)
+                        .shadow(radius: 4)
+                }
             }
-            .navigationTitle("Food Log")
-            .navigationBarItems(trailing: Button(action: {
-                showingImagePicker = true
-            }) {
-                Image(systemName: "camera")
-                    .imageScale(.large)
-            })
             .sheet(isPresented: $showingImagePicker) {
                 CameraView(imageData: $imageData)
             }

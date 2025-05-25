@@ -8,7 +8,7 @@ struct ContentView: View {
     
     init() {
         // Replace with your OpenAI API key
-        let apiKey = "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"
+        let apiKey = ""
         _viewModel = StateObject(wrappedValue: FoodLogViewModel(apiKey: apiKey))
     }
     

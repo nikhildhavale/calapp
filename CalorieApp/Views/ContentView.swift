@@ -7,7 +7,6 @@ struct ContentView: View {
     @State private var imageData: Data?
     
     init() {
-        // Replace with your OpenAI API key
         let apiKey = ""
         _viewModel = StateObject(wrappedValue: FoodLogViewModel(apiKey: apiKey))
     }

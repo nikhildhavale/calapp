@@ -94,18 +94,41 @@ struct ImagePickerView: UIViewControllerRepresentable {
         
         func imagePickerController(_ picker: UIImagePickerController,
                                  didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-            if let editedImage = info[.editedImage] as? UIImage,
-               let imageData = editedImage.jpegData(compressionQuality: 0.8) {
-                parent.imageData = imageData
-            } else if let originalImage = info[.originalImage] as? UIImage,
-                      let imageData = originalImage.jpegData(compressionQuality: 0.8) {
-                parent.imageData = imageData
+            if let editedImage = info[.editedImage] as? UIImage {
+                processImage(editedImage)
+            } else if let originalImage = info[.originalImage] as? UIImage {
+                processImage(originalImage)
             }
             parent.presentationMode.wrappedValue.dismiss()
+        }
+        
+        private func processImage(_ image: UIImage) {
+            // Ensure the image is in the correct orientation
+            if let correctedImage = image.fixOrientation(),
+               // Convert to JPEG with high quality
+               let imageData = correctedImage.jpegData(compressionQuality: 1.0) {
+                parent.imageData = imageData
+            }
         }
         
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
             parent.presentationMode.wrappedValue.dismiss()
         }
+    }
+}
+
+// Add UIImage extension for orientation fix
+extension UIImage {
+    func fixOrientation() -> UIImage? {
+        if imageOrientation == .up {
+            return self
+        }
+        
+        UIGraphicsBeginImageContextWithOptions(size, false, scale)
+        draw(in: CGRect(origin: .zero, size: size))
+        let normalizedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return normalizedImage
     }
 } 

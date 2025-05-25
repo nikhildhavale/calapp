@@ -1,5 +1,12 @@
 import Foundation
 
+enum OpenAIError: Error {
+    case invalidImageData
+    case invalidResponse
+    case networkError(Error)
+    case parsingError
+}
+
 class OpenAIService {
     private let apiKey: String
     private let baseURL = "https://api.openai.com/v1/chat/completions"
@@ -9,6 +16,10 @@ class OpenAIService {
     }
     
     func analyzeImage(_ imageData: Data) async throws -> (name: String, ingredients: [String], calories: Int) {
+        guard !imageData.isEmpty else {
+            throw OpenAIError.invalidImageData
+        }
+        
         let base64Image = imageData.base64EncodedString()
         
         let requestBody: [String: Any] = [
@@ -33,22 +44,35 @@ class OpenAIService {
             "max_tokens": 500
         ]
         
-        var request = URLRequest(url: URL(string: baseURL)!)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-        request.httpBody = try JSONSerialization.data(withJSONObject: requestBody)
-        
-        let (data, _) = try await URLSession.shared.data(for: request)
-        let response = try JSONDecoder().decode(OpenAIResponse.self, from: data)
-        
-        guard let content = response.choices.first?.message.content,
-              let jsonData = content.data(using: .utf8),
-              let result = try? JSONDecoder().decode(FoodAnalysis.self, from: jsonData) else {
-            throw NSError(domain: "OpenAIService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to parse response"])
+        do {
+            var request = URLRequest(url: URL(string: baseURL)!)
+            request.httpMethod = "POST"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+            request.httpBody = try JSONSerialization.data(withJSONObject: requestBody)
+            
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                throw OpenAIError.invalidResponse
+            }
+            
+            let openAIResponse = try JSONDecoder().decode(OpenAIResponse.self, from: data)
+            
+            guard let content = openAIResponse.choices.first?.message.content,
+                  let jsonData = content.data(using: .utf8),
+                  let result = try? JSONDecoder().decode(FoodAnalysis.self, from: jsonData) else {
+                throw OpenAIError.parsingError
+            }
+            
+            return (result.name, result.ingredients, result.calories)
+        } catch {
+            if error is OpenAIError {
+                throw error
+            }
+            throw OpenAIError.networkError(error)
         }
-        
-        return (result.name, result.ingredients, result.calories)
     }
 }
 

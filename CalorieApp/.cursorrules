@@ -13,7 +13,55 @@
 // Always add debug logs & comments in the code to debug & readability
 // Every time you choose to apply a rules(s), explicitly state the rule(s) in the output. You can abbreviate the rule(s) to a single word or phrase. 
 # Existing Project Structure
+.
+├── buildServer.json
+├── CalorieApp
+│   ├── AppDelegate.swift
+│   ├── Assets.xcassets
+│   │   ├── AccentColor.colorset
+│   │   │   └── Contents.json
+│   │   ├── AppIcon.appiconset
+│   │   │   └── Contents.json
+│   │   └── Contents.json
+│   ├── Base.lproj
+│   │   ├── LaunchScreen.storyboard
+│   │   └── Main.storyboard
+│   ├── Config.plist
+│   ├── Info.plist
+│   ├── Instructions
+│   │   └── Instructions.md
+│   ├── Models
+│   │   └── FoodItem.swift
+│   ├── SceneDelegate.swift
+│   ├── Services
+│   │   └── OpenAIService.swift
+│   ├── Utilities
+│   │   ├── AppConfiguration.swift
+│   │   └── Configuration.swift
+│   ├── ViewController.swift
+│   ├── ViewModels
+│   │   └── FoodLogViewModel.swift
+│   └── Views
+│       ├── CameraView.swift
+│       ├── ContentView.swift
+│       └── FoodDetailView.swift
+├── CalorieApp.xcodeproj
+│   ├── project.pbxproj
+│   ├── project.xcworkspace
+│   │   ├── contents.xcworkspacedata
+│   │   ├── xcshareddata
+│   │   │   └── swiftpm
+│   │   │       └── configuration
+│   │   └── xcuserdata
+│   │       └── nikhildhavale.xcuserdatad
+│   │           └── UserInterfaceState.xcuserstate
+│   └── xcuserdata
+│       └── nikhildhavale.xcuserdatad
+│           └── xcschemes
+│               └── xcschememanagement.plist
+└── README.md
 
+22 directories, 25 files
 #Tech Stack
 1. Swift
    - Modern, safe, and powerful programming language

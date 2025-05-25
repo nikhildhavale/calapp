@@ -36,7 +36,7 @@ class OpenAIService {
                     "content": [
                         [
                             "type": "text",
-                            "text": "Analyze this food image and provide: 1. Food name 2. List of ingredients 3. Estimated calories. Format as JSON with fields: name, ingredients (array), calories (number)"
+                            "text": "Analyze this food image and provide: 1. Food name 2. List of ingredients 3. Estimated calories. Format as JSON with fields: name, ingredients (array), calories (number). Return only the JSON, no markdown."
                         ],
                         [
                             "type": "image_url",
@@ -81,10 +81,19 @@ class OpenAIService {
             if let content = openAIResponse.choices.first?.message.content {
                 print("📝 Raw response content: \(content)")
                 
-                guard let jsonData = content.data(using: .utf8),
+                // Clean up the content by removing markdown code blocks if present
+                let cleanContent = content
+                    .replacingOccurrences(of: "```json\n", with: "")
+                    .replacingOccurrences(of: "```\n", with: "")
+                    .replacingOccurrences(of: "```", with: "")
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                
+                print("🧹 Cleaned content: \(cleanContent)")
+                
+                guard let jsonData = cleanContent.data(using: .utf8),
                       let result = try? JSONDecoder().decode(FoodAnalysis.self, from: jsonData) else {
                     print("❌ Error: Failed to parse response JSON")
-                    print("Response content that couldn't be parsed: \(content)")
+                    print("Response content that couldn't be parsed: \(cleanContent)")
                     throw OpenAIError.parsingError
                 }
                 

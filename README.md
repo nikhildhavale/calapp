@@ -104,28 +104,3 @@ Clarity in instruction.md and .cursor-rules
 Deadline:
 72 hours after task start.
 
-Bonus (Optional):
-Image compression optimization before sending to OpenAI.
-
-
-UI improvement (better camera/edit screens).
-
-
-Deployment on TestFlight.
-
-
-
-Submit: GitHub repo URL + 1-minute screen recording walkthrough.
-APP MUST BE WRITTEN IN SWIFT
-
-
-Once finished, send email and Linkedin Messageto:
-dyana@appsclicks.com and nissan@appsclicks.com
-https://www.linkedin.com/in/nissanventura/ CEO at AppsClicks
-and
-https://www.linkedin.com/in/dyana-pradeep/ HR at AppsClicks
-
-Title: iOS app - vibe coding test
-
-Send full video of showing all app functionalities you managed to build
-

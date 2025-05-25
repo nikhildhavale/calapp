@@ -13,17 +13,23 @@ class OpenAIService {
     
     init(apiKey: String) {
         self.apiKey = apiKey
+        print("🔑 OpenAIService initialized with API key: \(apiKey.prefix(8))...")
     }
     
     func analyzeImage(_ imageData: Data) async throws -> (name: String, ingredients: [String], calories: Int) {
+        print("📸 Starting image analysis...")
+        print("📦 Image data size: \(ByteCountFormatter.string(fromByteCount: Int64(imageData.count), countStyle: .file))")
+        
         guard !imageData.isEmpty else {
+            print("❌ Error: Image data is empty")
             throw OpenAIError.invalidImageData
         }
         
         let base64Image = imageData.base64EncodedString()
+        print("🔄 Converted image to base64 string")
         
         let requestBody: [String: Any] = [
-            "model": "gpt-4-vision-preview",
+            "model": "gpt-4o",
             "messages": [
                 [
                     "role": "user",
@@ -45,6 +51,7 @@ class OpenAIService {
         ]
         
         do {
+            print("🚀 Sending request to OpenAI API...")
             var request = URLRequest(url: URL(string: baseURL)!)
             request.httpMethod = "POST"
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -53,24 +60,50 @@ class OpenAIService {
             
             let (data, response) = try await URLSession.shared.data(for: request)
             
-            guard let httpResponse = response as? HTTPURLResponse,
-                  (200...299).contains(httpResponse.statusCode) else {
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("❌ Error: Invalid response type")
+                throw OpenAIError.invalidResponse
+            }
+            
+            print("📡 Received response with status code: \(httpResponse.statusCode)")
+            
+            if !(200...299).contains(httpResponse.statusCode) {
+                print("❌ Error: HTTP status code \(httpResponse.statusCode)")
+                if let errorJson = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                    print("Error details: \(errorJson)")
+                }
                 throw OpenAIError.invalidResponse
             }
             
             let openAIResponse = try JSONDecoder().decode(OpenAIResponse.self, from: data)
+            print("✅ Successfully decoded OpenAI response")
             
-            guard let content = openAIResponse.choices.first?.message.content,
-                  let jsonData = content.data(using: .utf8),
-                  let result = try? JSONDecoder().decode(FoodAnalysis.self, from: jsonData) else {
+            if let content = openAIResponse.choices.first?.message.content {
+                print("📝 Raw response content: \(content)")
+                
+                guard let jsonData = content.data(using: .utf8),
+                      let result = try? JSONDecoder().decode(FoodAnalysis.self, from: jsonData) else {
+                    print("❌ Error: Failed to parse response JSON")
+                    print("Response content that couldn't be parsed: \(content)")
+                    throw OpenAIError.parsingError
+                }
+                
+                print("✨ Successfully parsed food analysis:")
+                print("🍽 Food name: \(result.name)")
+                print("📋 Ingredients: \(result.ingredients.joined(separator: ", "))")
+                print("🔢 Calories: \(result.calories)")
+                
+                return (result.name, result.ingredients, result.calories)
+            } else {
+                print("❌ Error: No content in response choices")
                 throw OpenAIError.parsingError
             }
-            
-            return (result.name, result.ingredients, result.calories)
         } catch {
-            if error is OpenAIError {
-                throw error
+            if let openAIError = error as? OpenAIError {
+                print("❌ OpenAI Error: \(openAIError)")
+                throw openAIError
             }
+            print("❌ Network Error: \(error.localizedDescription)")
             throw OpenAIError.networkError(error)
         }
     }
@@ -93,4 +126,12 @@ struct FoodAnalysis: Codable {
     let name: String
     let ingredients: [String]
     let calories: Int
+}
+
+extension ByteCountFormatter {
+    static func string(fromByteCount byteCount: Int64, countStyle: ByteCountFormatter.CountStyle) -> String {
+        let formatter = ByteCountFormatter()
+        formatter.countStyle = countStyle
+        return formatter.string(fromByteCount: byteCount)
+    }
 } 

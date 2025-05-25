@@ -1,6 +1,6 @@
 ### This is huge using cursor to develop an ios app. Something new for me
 
-
+### Please use your own api key for using opwn api
 
 Build a fully functional iOS app using Cursor, SweetPad, and AI agent-based development workflows, replicating the features of CalAI—an app that analyzes food calories from a photo using OpenAI’s multimodal API.
 

@@ -2,12 +2,14 @@ import SwiftUI
 import AVFoundation
 import UIKit
 import PhotosUI
+import Photos
 
 struct CameraView: View {
     @Binding var imageData: Data?
     @Environment(\.presentationMode) var presentationMode
     @State private var showSourceTypeMenu = true
     @State private var sourceType: UIImagePickerController.SourceType?
+    @State private var showPhotoLibraryAccessAlert = false
     
     var body: some View {
         Group {
@@ -16,6 +18,46 @@ struct CameraView: View {
                     .ignoresSafeArea()
             } else {
                 sourceTypeSelector
+            }
+        }
+        .onAppear {
+            if sourceType == .photoLibrary {
+                checkPhotoLibraryAccess()
+            }
+        }
+        .alert("Photo Library Access", isPresented: $showPhotoLibraryAccessAlert) {
+            Button("Open Settings", role: .none) {
+                if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.open(settingsURL)
+                }
+            }
+            Button("Cancel", role: .cancel) {
+                presentationMode.wrappedValue.dismiss()
+            }
+        } message: {
+            Text("Please grant full access to your photo library in Settings to select photos for food analysis.")
+        }
+    }
+    
+    private func checkPhotoLibraryAccess() {
+        PHPhotoLibrary.requestAuthorization(for: .readWrite) { status in
+            DispatchQueue.main.async {
+                switch status {
+                case .limited:
+                    // Show alert to request full access
+                    showPhotoLibraryAccessAlert = true
+                case .denied, .restricted:
+                    // Show alert to open settings
+                    showPhotoLibraryAccessAlert = true
+                case .authorized:
+                    // We have full access, do nothing
+                    break
+                case .notDetermined:
+                    // The user hasn't determined this yet, the system will handle it
+                    break
+                @unknown default:
+                    break
+                }
             }
         }
     }
@@ -40,6 +82,7 @@ struct CameraView: View {
             
             Button(action: {
                 sourceType = .photoLibrary
+                checkPhotoLibraryAccess()
             }) {
                 HStack {
                     Image(systemName: "photo.on.rectangle")

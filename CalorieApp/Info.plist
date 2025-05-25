@@ -24,5 +24,9 @@
 	<string>This app needs camera access to take photos of food for analysis</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app needs access to your photo library to select food images for analysis</string>
+	<key>PHPhotoLibraryPreventAutomaticLimitedAccessAlert</key>
+	<true/>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>This app needs full access to your photo library to save and analyze food images</string>
 </dict>
 </plist>

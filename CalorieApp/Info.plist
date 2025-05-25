@@ -15,11 +15,14 @@
 					<string>Default Configuration</string>
 					<key>UISceneDelegateClassName</key>
 					<string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
-					<key>UISceneStoryboardFile</key>
-					<string>Main</string>
 				</dict>
 			</array>
 		</dict>
 	</dict>
+
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs camera access to take photos of food for analysis</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs access to your photo library to select food images for analysis</string>
 </dict>
 </plist>

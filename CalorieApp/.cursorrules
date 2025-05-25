@@ -1,0 +1,42 @@
+// Cursor Rules:
+// 1. The cursor should be positioned at the beginning of the line
+// 2. The cursor should move to the next line after pressing Enter
+// 3. The cursor should maintain indentation when starting a new line
+// 4. The cursor should move one character at a time when using arrow keys
+// 5. The cursor should skip words when using Ctrl/Cmd + arrow keys
+// 6. The cursor should select text when using Shift + arrow keys
+// 7. The cursor should be visible at all times
+// 8. The cursor should blink to indicate its position
+// 9. The cursor should wrap to the next/previous line at text boundaries
+// 10. The cursor should maintain its column position when moving up/down
+// 11. you are building AI app that takes a picture of food and gives you the calorie count of the food
+// Always add debug logs & comments in the code to debug & readability
+// Every time you choose to apply a rules(s), explicitly state the rule(s) in the output. You can abbreviate the rule(s) to a single word or phrase. 
+# Existing Project Structure
+
+#Tech Stack
+1. Swift
+   - Modern, safe, and powerful programming language
+   - Strong type system and protocol-oriented programming
+   - Native iOS development language
+
+2. SwiftUI
+   - Declarative UI framework
+   - Modern way to build user interfaces across Apple platforms
+   - Automatic support for Dark Mode, Dynamic Type, and localization
+   - Live preview functionality
+
+3. UIKit
+   - Traditional UI framework for iOS development
+   - Rich set of UI components and controls
+   - Mature framework with extensive documentation
+   - Fine-grained control over UI elements
+   - Camera integration capabilities for food image capture
+
+Key Features to Implement:
+- Camera integration using UIKit's AVFoundation
+- Core ML for food recognition
+- Vision framework for image analysis
+- SwiftUI views for modern UI components
+- UIKit bridge for complex UI requirements
+

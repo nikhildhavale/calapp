@@ -1,11 +1,5 @@
 ### This is huge using cursor to develop an ios app. Something new for me
 
-Your goal is to develop mobile App via swift A to Z, from design, to fully functional app. all via vibe coding, using cursor and SweetPad, xCode, we are looking for someone that wants to build lots of mobile apps at scale.
-Follow this guide to build ios App:
-https://youtu.be/jzhANqD_VhM?si=f0Shb2nCLygYcihT
-
-The test is to build an app that takes picture of a good, and analysis its calories and nutrient, similar to CalAI concept, https://apps.apple.com/us/app/cal-ai-calorie-tracker/id6480417616
- You can use any AI Agents and Tools in order to complete faster and better!
 
 
 Build a fully functional iOS app using Cursor, SweetPad, and AI agent-based development workflows, replicating the features of CalAI—an app that analyzes food calories from a photo using OpenAI’s multimodal API.

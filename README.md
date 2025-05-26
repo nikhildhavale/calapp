@@ -60,4 +60,5 @@ instruction.md: PRD document with features, API, and data models.
 
 
 .cursor-rules: Your custom cursor rules used in project.
+First timne images picker is blank
 

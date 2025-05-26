@@ -5,7 +5,7 @@
 Build a fully functional iOS app using Cursor, SweetPad, and AI agent-based development workflows, replicating the features of CalAI—an app that analyzes food calories from a photo using OpenAI’s multimodal API.
 
 Task Scope:
-1. App Concept:
+App Concept:
 Develop an iOS Swift app that:
 Takes a photo of food.
 

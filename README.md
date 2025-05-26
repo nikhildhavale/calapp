@@ -1,7 +1,7 @@
 ### This is huge using cursor to develop an ios app. Something new for me
 ### Just run on Xcode 16.3
 ### Please use your own api key for using open api in ContentView.swift
-# known issue
+##### known issue
 1. First time when user selects the images the image picker is blank
 
 

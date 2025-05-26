@@ -62,6 +62,10 @@ Development Assets:
 instruction.md: PRD document with features, API, and data models.
 
 
+https://github.com/user-attachments/assets/250a3b88-ab1c-48bb-8ae7-4469df05661e
+
+
+
 .cursor-rules: Your custom cursor rules used in project.
 First timne images picker is blank
 

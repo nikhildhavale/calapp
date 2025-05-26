@@ -1,5 +1,5 @@
 ### This is huge using cursor to develop an ios app. Something new for me
-
+### Just run on Xcode 16.3
 ### Please use your own api key for using open api in ContentView.swift
 
 Build a fully functional iOS app using Cursor, SweetPad, and AI agent-based development workflows, replicating the features of CalAI—an app that analyzes food calories from a photo using OpenAI’s multimodal API.

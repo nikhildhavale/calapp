@@ -40,9 +40,6 @@ Real iOS device or Simulator (SweetPad integration required)
 
 
 
-Deliverables:
-Fully Working iOS App:
-
 
 Working camera capture (on device/simulator).
 
@@ -63,38 +60,4 @@ instruction.md: PRD document with features, API, and data models.
 
 
 .cursor-rules: Your custom cursor rules used in project.
-
-
-README.md: Installation + build steps.
-
-
-GitHub repo with commit history:
-
-
-Each feature must have separate commits with titles like feat: implement camera, fix: calorie update bug.
-
-
-
-Evaluation Criteria:
-Use of AI tools (Cursor, SweetPad, LLM prompting)
-
-
-Working feature set
-
-
-Debugging via Cursor AI logs
-
-
-Code structure: MVVM preferred
-
-
-UI: Basic, but functional
-
-
-Clarity in instruction.md and .cursor-rules
-
-
-
-Deadline:
-72 hours after task start.
 

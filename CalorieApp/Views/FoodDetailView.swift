@@ -1,9 +1,11 @@
 import SwiftUI
+import SwiftData
 
 struct FoodDetailView: View {
     @ObservedObject var viewModel: FoodLogViewModel
-    @State var foodItem: FoodItem
+    @Bindable var foodItem: FoodItem
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.modelContext) private var modelContext
     
     var body: some View {
         Form {
@@ -52,7 +54,7 @@ struct FoodDetailView: View {
         }
         .navigationTitle("Food Details")
         .navigationBarItems(trailing: Button("Save") {
-            viewModel.updateFoodItem(foodItem)
+            viewModel.updateFoodItem(foodItem, modelContext: modelContext)
             presentationMode.wrappedValue.dismiss()
         })
     }

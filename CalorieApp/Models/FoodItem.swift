@@ -1,7 +1,9 @@
 import Foundation
+import SwiftData
 
-struct FoodItem: Identifiable, Codable {
-    var id: UUID = UUID()
+@Model
+final class FoodItem {
+    var id: UUID
     var name: String
     var ingredients: [String]
     var calories: Int
@@ -10,6 +12,7 @@ struct FoodItem: Identifiable, Codable {
     var notes: String?
     
     init(name: String = "", ingredients: [String] = [], calories: Int = 0, imageData: Data? = nil, notes: String? = nil) {
+        self.id = UUID()
         self.name = name
         self.ingredients = ingredients
         self.calories = calories

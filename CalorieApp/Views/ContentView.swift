@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
     @StateObject private var viewModel: FoodLogViewModel
@@ -6,6 +7,8 @@ struct ContentView: View {
     @State private var showingImagePicker = false
     @State private var imageData: Data?
     @State private var selectedSource: UIImagePickerController.SourceType?
+    @Query private var foodItems: [FoodItem]
+    @Environment(\.modelContext) private var modelContext
     
     init() {
         let apiKey = "ENTER_YOUR_API_KEY_HERE"
@@ -23,15 +26,15 @@ struct ContentView: View {
                         .padding()
                     
                     List {
-                        ForEach(viewModel.getFoodItemsForDate(selectedDate)) { item in
+                        ForEach(viewModel.getFoodItemsForDate(selectedDate, items: foodItems)) { item in
                             NavigationLink(destination: FoodDetailView(viewModel: viewModel, foodItem: item)) {
                                 FoodItemRow(item: item)
                             }
                         }
                         .onDelete { indices in
                             indices.forEach { index in
-                                let items = viewModel.getFoodItemsForDate(selectedDate)
-                                viewModel.deleteFoodItem(items[index])
+                                let items = viewModel.getFoodItemsForDate(selectedDate, items: foodItems)
+                                viewModel.deleteFoodItem(items[index], modelContext: modelContext)
                             }
                         }
                     }
@@ -90,7 +93,7 @@ struct ContentView: View {
             .onChange(of: imageData) { newValue in
                 if let data = newValue {
                     Task {
-                        await viewModel.analyzeImage(data)
+                        await viewModel.analyzeImage(data, modelContext: modelContext)
                         imageData = nil
                     }
                 }
@@ -115,4 +118,5 @@ struct FoodItemRow: View {
 
 #Preview {
     ContentView()
+        .modelContainer(for: FoodItem.self, inMemory: true)
 } 

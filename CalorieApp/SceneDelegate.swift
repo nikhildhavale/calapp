@@ -7,6 +7,7 @@
 
 import UIKit
 import SwiftUI
+import SwiftData
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -16,10 +17,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: windowScene)
-        let viewController = ViewController()
-        window.rootViewController = viewController
-        self.window = window
-        window.makeKeyAndVisible()
+        
+        // Create SwiftData container
+        let schema = Schema([FoodItem.self])
+        let modelConfiguration = ModelConfiguration(schema: schema)
+        
+        do {
+            let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
+            let contentView = ContentView()
+                .modelContainer(container)
+            
+            let hostingController = UIHostingController(rootView: contentView)
+            window.rootViewController = hostingController
+            self.window = window
+            window.makeKeyAndVisible()
+        } catch {
+            fatalError("Failed to create ModelContainer: \(error.localizedDescription)")
+        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

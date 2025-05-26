@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import SwiftData
 
 @MainActor
 class FoodLogViewModel: ObservableObject {
@@ -8,26 +9,10 @@ class FoodLogViewModel: ObservableObject {
     @Published var errorMessage: String?
     
     private let openAIService: OpenAIService
-    private let userDefaults = UserDefaults.standard
-    private let foodItemsKey = "foodItems"
     private var errorDismissTask: Task<Void, Never>?
     
     init(apiKey: String) {
         self.openAIService = OpenAIService(apiKey: apiKey)
-        loadFoodItems()
-    }
-    
-    private func loadFoodItems() {
-        if let data = userDefaults.data(forKey: foodItemsKey),
-           let items = try? JSONDecoder().decode([FoodItem].self, from: data) {
-            foodItems = items
-        }
-    }
-    
-    private func saveFoodItems() {
-        if let data = try? JSONEncoder().encode(foodItems) {
-            userDefaults.set(data, forKey: foodItemsKey)
-        }
     }
     
     private func showError(_ message: String) {
@@ -44,7 +29,7 @@ class FoodLogViewModel: ObservableObject {
         }
     }
     
-    func analyzeImage(_ imageData: Data) async {
+    func analyzeImage(_ imageData: Data, modelContext: ModelContext) async {
         isLoading = true
         errorMessage = nil
         
@@ -54,8 +39,8 @@ class FoodLogViewModel: ObservableObject {
                                   ingredients: ingredients,
                                   calories: calories,
                                   imageData: imageData)
-            foodItems.append(foodItem)
-            saveFoodItems()
+            modelContext.insert(foodItem)
+            try modelContext.save()
         } catch OpenAIError.invalidImageData {
             showError("The image could not be processed. Please try taking the photo again.")
         } catch OpenAIError.invalidResponse {
@@ -71,21 +56,18 @@ class FoodLogViewModel: ObservableObject {
         isLoading = false
     }
     
-    func updateFoodItem(_ item: FoodItem) {
-        if let index = foodItems.firstIndex(where: { $0.id == item.id }) {
-            foodItems[index] = item
-            saveFoodItems()
-        }
+    func updateFoodItem(_ item: FoodItem, modelContext: ModelContext) {
+        try? modelContext.save()
     }
     
-    func deleteFoodItem(_ item: FoodItem) {
-        foodItems.removeAll { $0.id == item.id }
-        saveFoodItems()
+    func deleteFoodItem(_ item: FoodItem, modelContext: ModelContext) {
+        modelContext.delete(item)
+        try? modelContext.save()
     }
     
-    func getFoodItemsForDate(_ date: Date) -> [FoodItem] {
+    func getFoodItemsForDate(_ date: Date, items: [FoodItem]) -> [FoodItem] {
         let calendar = Calendar.current
-        return foodItems.filter { calendar.isDate($0.date, inSameDayAs: date) }
+        return items.filter { calendar.isDate($0.date, inSameDayAs: date) }
     }
     
     deinit {

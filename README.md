@@ -3,6 +3,8 @@
 ### Please use your own api key for using open api in ContentView.swift
 # known issue
 1. First time when user selects the images the image picker is blank
+
+
 Build a fully functional iOS app using Cursor, SweetPad, and AI agent-based development workflows, replicating the features of CalAI—an app that analyzes food calories from a photo using OpenAI’s multimodal API.
 
 Task Scope:
